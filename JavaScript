@@ -1,0 +1,141 @@
+const result = document.getElementById('result');
+const limpar = document.getElementById('limpar');
+const backspaceBtn = document.getElementById('backspaceBtn');
+const divideBtn = document.getElementById('divideBtn');
+const multiplicaBtn = document.getElementById('multiplicaBtn');
+const subtraBtn = document.getElementById('subtraBtn');
+const maisBtn = document.getElementById('maisBtn');
+const igualBtn = document.getElementById('igualBtn');
+const pontolBtn = document.getElementById('pontolBtn');
+const zeroBtn = document.getElementById('zeroBtn');
+const umBtn = document.getElementById('umBtn');
+const doisBtn = document.getElementById('doisBtn');
+const tresBtn = document.getElementById('tresBtn');
+const quatroBtn = document.getElementById('quatroBtn');
+const cincoBtn = document.getElementById('cincoBtn');
+const seisBtn = document.getElementById('seisBtn');
+const seteBtn = document.getElementById('seteBtn');
+const oitoBtn = document.getElementById('oitoBtn');
+const noveBtn = document.getElementById('noveBtn');
+const buttons = document.querySelectorAll('button');
+
+
+let primeiroNum = '';
+let segundoNum = '';
+let operator = '';
+let currentValue = '';
+let previousValue = '';
+let currentOperator = '';
+
+function clear() {
+  result.value = '';
+  currentValue = '';
+  previousValue = '';
+  currentOperator = '';
+}
+
+function backspace() {
+  currentValue = currentValue.toString().slice(0, -1);
+  result.value = currentValue;
+}
+
+function handleNumberClick(number) {
+  currentValue += number;
+  result.value = currentValue;
+}
+
+function handleOperatorClick(operator) {
+  if (currentOperator && previousValue && currentValue) {
+    calculate();
+  } else {
+    previousValue = currentValue;
+    currentValue = '';
+  }
+
+  currentOperator = operator;
+}
+
+function calculate() {
+  let resultValue;
+  switch (currentOperator) {
+    case '/':
+      resultValue = Number(previousValue) / Number(currentValue);
+      break;
+    case '*':
+      resultValue = Number(previousValue) * Number(currentValue);
+      break;
+    case '-':
+      resultValue = Number(previousValue) - Number(currentValue);
+      break;
+    case '+':
+      resultValue = Number(previousValue) + Number(currentValue);
+      break;
+  }
+
+  result.value = resultValue;
+  previousValue = resultValue;
+  currentValue = '';
+  currentOperator = '';
+}
+
+limpar.addEventListener('click', clear);
+backspaceBtn.addEventListener('click', backspace);
+divideBtn.addEventListener('click', () => handleOperatorClick('/'));
+multiplicaBtn.addEventListener('click', () => handleOperatorClick('*'));
+subtraBtn.addEventListener('click', () => handleOperatorClick('-'));
+maisBtn.addEventListener('click', () => handleOperatorClick('+'));
+igualBtn.addEventListener('click', calculate);
+pontolBtn.addEventListener('click', () => handleNumberClick('.'));
+zeroBtn.addEventListener('click', () => handleNumberClick('0'));
+umBtn.addEventListener('click', () => handleNumberClick('1'));
+doisBtn.addEventListener('click', () => handleNumberClick('2'));
+tresBtn.addEventListener('click', () => handleNumberClick('3'));
+quatroBtn.addEventListener('click', () => handleNumberClick('4'));
+cincoBtn.addEventListener('click', () => handleNumberClick('5'));
+seisBtn.addEventListener('click', () => handleNumberClick('6'));
+seteBtn.addEventListener('click', () => handleNumberClick('7'));
+oitoBtn.addEventListener('click', () => handleNumberClick('8'));
+noveBtn.addEventListener('click', () => handleNumberClick('9'));
+
+buttons.forEach((button) => {
+  button.addEventListener('click', () => {
+    if (button.classList.contains('number')) {
+      if (operator === '') {
+        primeiroNum += button.textContent;
+        result.textContent = primeiroNum;
+      } else {
+        segundoNum += button.textContent;
+        result.textContent = segundoNum;
+      }
+    } else if (button.classList.contains('operator')) {
+      operator = button.textContent;
+    } else if (button.classList.contains('equals')) {
+      if (operator === '+') {
+        result.textContent = parseFloat(primeiroNum) + parseFloat(segundoNum);
+      } else if (operator === '-') {
+        result.textContent = parseFloat(primeiroNum) - parseFloat(segundoNum);
+      } else if (operator === '*') {
+        result.textContent = parseFloat(primeiroNum) * parseFloat(segundoNum);
+      } else if (operator === '/') {
+        result.textContent = parseFloat(primeiroNum) / parseFloat(segundoNum);
+      }
+     
+      else if (operator === '%') {
+        result.textContent = (parseFloat(primeiroNum) / 100) * parseFloat(segundoNum);
+      }
+      primeiroNum = result.textContent;
+      segundoNum = '';
+      operator = '';
+    } else if (button.classList.contains('clear')) {
+      primeiroNum = '';
+      segundoNum = '';
+      operator = '';
+      result.textContent = '0';
+    } else if (button.classList.contains('percentage')) {
+      operator = '%';
+      
+      segundoNum = primeiroNum;
+      result.textContent = '';
+    }
+  });
+})
